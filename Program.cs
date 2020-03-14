@@ -10,6 +10,7 @@ using BenchmarkDotNet.Configs;
 using BenchmarkDotNet.Jobs;
 using BenchmarkDotNet.Running;
 using BenchmarkDotNet.Toolchains.InProcess.Emit;
+using BizHawk.Emulation.Common;
 
 namespace BizBenchMark
 {
@@ -34,7 +35,14 @@ namespace BizBenchMark
 		public static void Main(string[] args)
 		{
 			var rom = GetRom();
+			var gameInfo = GameInfo.NullInstance;
+			var coreComm = new CoreComm(ShowMessage, ShowMessage);
 			var summary = BenchmarkRunner.Run<Program>();
+		}
+
+		private static void ShowMessage(string message)
+		{
+			Console.WriteLine(message);
 		}
 
 		private static byte[] GetRom()
