@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using BenchmarkDotNet.Attributes;
@@ -30,6 +32,23 @@ namespace BizBenchMark
 
 		public static void Main(string[] args)
 		{
+			var rom = GetRom();
+		}
+
+		private static byte[] GetRom()
+		{
+			var assembly = Assembly.GetExecutingAssembly();
+			using (var stream = assembly.GetManifestResourceStream("BizBenchMark.test.nes"))
+			{
+				if (stream == null)
+				{
+					throw new InvalidOperationException("Could not find test rom");
+				}
+
+				byte[] bytes = new byte[stream.Length];
+				stream.Read(bytes, 0, bytes.Length);
+				return bytes;
+			}
 		}
 	}
 }
