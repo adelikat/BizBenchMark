@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Configs;
 using BenchmarkDotNet.Jobs;
+using BenchmarkDotNet.Running;
 using BenchmarkDotNet.Toolchains.InProcess.Emit;
 
 namespace BizBenchMark
@@ -33,6 +34,7 @@ namespace BizBenchMark
 		public static void Main(string[] args)
 		{
 			var rom = GetRom();
+			var summary = BenchmarkRunner.Run<Program>();
 		}
 
 		private static byte[] GetRom()
@@ -49,6 +51,15 @@ namespace BizBenchMark
 				stream.Read(bytes, 0, bytes.Length);
 				return bytes;
 			}
+		}
+
+		[Benchmark]
+		public decimal FrameAdvance()
+		{
+			int x = 0;
+			x++;
+			var y = Math.Round((decimal) x);
+			return y;
 		}
 	}
 }
