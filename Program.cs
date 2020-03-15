@@ -10,7 +10,9 @@ using BenchmarkDotNet.Configs;
 using BenchmarkDotNet.Jobs;
 using BenchmarkDotNet.Running;
 using BenchmarkDotNet.Toolchains.InProcess.Emit;
+using BizHawk.Client.Common;
 using BizHawk.Emulation.Common;
+using BizHawk.Emulation.Cores.Nintendo.NES;
 
 namespace BizBenchMark
 {
@@ -34,10 +36,21 @@ namespace BizBenchMark
 
 		public static void Main(string[] args)
 		{
+			var nes = CreateCore();
+			var summary = BenchmarkRunner.Run<Program>();
+		}
+
+		private static NES CreateCore()
+		{
 			var rom = GetRom();
 			var gameInfo = GameInfo.NullInstance;
-			var coreComm = new CoreComm(ShowMessage, ShowMessage);
-			var summary = BenchmarkRunner.Run<Program>();
+			var cfp = new CoreFileProvider(ShowMessage, new FirmwareManager(), ".\\Firmware", new Dictionary<string, string>());
+			var coreComm = new CoreComm(ShowMessage, ShowMessage, cfp);
+
+			var settings = new NES.NESSettings();
+			var syncSettings = new NES.NESSyncSettings();
+			var nes = new NES(coreComm, gameInfo, rom, settings, syncSettings);
+			return nes;
 		}
 
 		private static void ShowMessage(string message)
