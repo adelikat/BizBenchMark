@@ -44,7 +44,11 @@ namespace BizBenchMark
 		{
 			var rom = GetRom();
 			var gameInfo = GameInfo.NullInstance;
-			var cfp = new CoreFileProvider(ShowMessage, new FirmwareManager(), ".\\Firmware", new Dictionary<string, string>());
+
+			var pathEntries = new PathEntryCollection();
+			pathEntries.ResolveWithDefaults();
+
+			var cfp = new CoreFileProvider(ShowMessage, new FirmwareManager(), pathEntries, new Dictionary<string, string>());
 			var coreComm = new CoreComm(ShowMessage, ShowMessage, cfp);
 
 			var settings = new NES.NESSettings();
