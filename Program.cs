@@ -17,6 +17,8 @@ namespace BizBenchMark
 	[Config(typeof(Config))]
 	public class Program
 	{
+		private static NES _nes;
+
 		private class Config : ManualConfig
 		{
 			public Config()
@@ -34,7 +36,12 @@ namespace BizBenchMark
 
 		public static void Main(string[] args)
 		{
-			var nes = CreateCore();
+			_nes = CreateCore();
+			for (int i = 0; i < 200; i++)
+			{
+				_nes.FrameAdvance(new SimpleController(), true, true);
+			}
+
 			var summary = BenchmarkRunner.Run<Program>();
 		}
 
