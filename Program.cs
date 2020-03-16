@@ -18,6 +18,7 @@ namespace BizBenchMark
 	public class Program
 	{
 		private static NES _nes;
+		private static SimpleController _controller = new SimpleController();
 
 		private class Config : ManualConfig
 		{
@@ -39,7 +40,7 @@ namespace BizBenchMark
 			_nes = CreateCore();
 			for (int i = 0; i < 200; i++)
 			{
-				_nes.FrameAdvance(new SimpleController(), true, true);
+				_nes.FrameAdvance(_controller, true, true);
 			}
 
 			var summary = BenchmarkRunner.Run<Program>();
@@ -88,12 +89,9 @@ namespace BizBenchMark
 		}
 
 		[Benchmark]
-		public decimal FrameAdvance()
+		public void FrameAdvance()
 		{
-			int x = 0;
-			x++;
-			var y = Math.Round((decimal) x);
-			return y;
+			_nes.FrameAdvance(_controller, true, true);
 		}
 	}
 }
