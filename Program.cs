@@ -1,16 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Configs;
 using BenchmarkDotNet.Jobs;
 using BenchmarkDotNet.Running;
 using BenchmarkDotNet.Toolchains.InProcess.Emit;
 using BizHawk.Client.Common;
+using BizHawk.Common.PathExtensions;
 using BizHawk.Emulation.Common;
 using BizHawk.Emulation.Cores.Nintendo.NES;
 
@@ -42,6 +40,10 @@ namespace BizBenchMark
 
 		private static NES CreateCore()
 		{
+			string xmlPath = Path.Combine(PathUtils.GetExeDirectoryAbsolute(), "NesCarts.xml");
+			var bootGodBytes = File.ReadAllBytes(xmlPath);
+			NES.BootGodDB.GetDatabaseBytes = () => bootGodBytes;
+
 			var rom = GetRom();
 			var gameInfo = GameInfo.NullInstance;
 
