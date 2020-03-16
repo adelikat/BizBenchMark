@@ -18,7 +18,7 @@ namespace BizBenchMark
 	public class Program
 	{
 		private static NES _nes;
-		private static SimpleController _controller = new SimpleController();
+		private static readonly SimpleController EmptyController = new SimpleController();
 
 		private class Config : ManualConfig
 		{
@@ -38,11 +38,6 @@ namespace BizBenchMark
 		public static void Main(string[] args)
 		{
 			_nes = CreateCore();
-			for (int i = 0; i < 200; i++)
-			{
-				_nes.FrameAdvance(_controller, true, true);
-			}
-
 			var summary = BenchmarkRunner.Run<Program>();
 		}
 
@@ -58,18 +53,19 @@ namespace BizBenchMark
 			var pathEntries = new PathEntryCollection();
 			pathEntries.ResolveWithDefaults();
 
-			var cfp = new CoreFileProvider(ShowMessage, new FirmwareManager(), pathEntries, new Dictionary<string, string>());
-			var coreComm = new CoreComm(ShowMessage, ShowMessage, cfp);
+			var cfp = new CoreFileProvider(Console.WriteLine, new FirmwareManager(), pathEntries, new Dictionary<string, string>());
+			var coreComm = new CoreComm(Console.WriteLine, Console.WriteLine, cfp);
 
 			var settings = new NES.NESSettings();
 			var syncSettings = new NES.NESSyncSettings();
 			var nes = new NES(coreComm, gameInfo, rom, settings, syncSettings);
-			return nes;
-		}
 
-		private static void ShowMessage(string message)
-		{
-			Console.WriteLine(message);
+			for (int i = 0; i < 200; i++)
+			{
+				nes.FrameAdvance(EmptyController, true, true);
+			}
+
+			return nes;
 		}
 
 		private static byte[] GetRom()
@@ -91,7 +87,7 @@ namespace BizBenchMark
 		[Benchmark]
 		public void FrameAdvance()
 		{
-			_nes.FrameAdvance(_controller, true, true);
+			_nes.FrameAdvance(EmptyController, true, true);
 		}
 	}
 }
