@@ -45,7 +45,7 @@ namespace BizBenchMark
 		{
 			string xmlPath = Path.Combine(PathUtils.GetExeDirectoryAbsolute(), "NesCarts.xml");
 			var bootGodBytes = File.ReadAllBytes(xmlPath);
-			NES.BootGodDB.GetDatabaseBytes = () => bootGodBytes;
+			BootGodDb.GetDatabaseBytes = () => bootGodBytes;
 
 			var rom = GetRom();
 			var gameInfo = GameInfo.NullInstance;
