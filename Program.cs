@@ -43,7 +43,7 @@ namespace BizBenchMark
 
 		private static NES CreateCore()
 		{
-			string xmlPath = Path.Combine(PathUtils.GetExeDirectoryAbsolute(), "NesCarts.xml");
+			string xmlPath = Path.Combine(PathUtils.ExeDirectoryPath, "NesCarts.xml");
 			var bootGodBytes = File.ReadAllBytes(xmlPath);
 			BootGodDb.GetDatabaseBytes = () => bootGodBytes;
 
